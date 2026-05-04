@@ -8,19 +8,17 @@ import { Kpi } from './components/Kpi';
 import { Overview } from './components/Overview';
 import { RagArchitecture } from './components/RagArchitecture';
 import { SalesStrategy } from './components/SalesStrategy';
-import { Staffing } from './components/Staffing';
 
 function App() {
   return (
-    <main>
+    <main className="proposal-page">
       <Hero />
       <Overview />
       <SalesStrategy />
       <Differentiators />
       <ConsultingTimeline />
-      <BuildTimeline />
       <RagArchitecture />
-      <Staffing />
+      <BuildTimeline />
       <Estimate />
       <Kpi />
       <Conclusion />

@@ -2,7 +2,7 @@ import { Section } from './Section';
 
 export function Conclusion() {
   return (
-    <Section eyebrow="Conclusion" title="결론">
+    <Section eyebrow="09. Conclusion" title="결론">
       <div className="conclusion-card">
         <p>
           본 사업은 A사의 보안 요구사항을 전제로 하되, 빠른 도입을 위해 MVP 범위를 명확히 통제하는
