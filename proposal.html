@@ -1,0 +1,1040 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>A사 On-prem RAG Chatbot 구축 사업 기획안</title>
+    <style>
+      :root {
+        --navy: #102a4c;
+        --blue: #2f68b2;
+        --ink: #132b4d;
+        --muted: #58687f;
+        --line: #d9e2ef;
+        --panel: #f8fbff;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background: #eef3f9;
+        font-family:
+          "Pretendard", "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic",
+          system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.55;
+      }
+
+      main {
+        width: min(1240px, calc(100% - 48px));
+        margin: 0 auto;
+        padding: 36px 0 72px;
+      }
+
+      .hero,
+      .section {
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        box-shadow: 0 14px 38px rgba(37, 56, 85, 0.08);
+      }
+
+      .hero {
+        padding: 48px;
+        color: #fff;
+        background: linear-gradient(135deg, #0d2444, #225d9d);
+      }
+
+      .meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 26px;
+      }
+
+      .meta span,
+      .pill,
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-size: 0.82rem;
+        font-weight: 800;
+      }
+
+      .meta span {
+        color: #d9e8fb;
+        background: rgba(255, 255, 255, 0.11);
+        border: 1px solid rgba(255, 255, 255, 0.18);
+      }
+
+      .eyebrow {
+        margin: 0 0 10px;
+        color: var(--blue);
+        font-size: 0.82rem;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .hero .eyebrow {
+        color: #a8c5ee;
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+        letter-spacing: -0.045em;
+      }
+
+      h1 {
+        max-width: 920px;
+        font-size: clamp(2.5rem, 5vw, 4.4rem);
+        line-height: 1.08;
+      }
+
+      .lead {
+        max-width: 820px;
+        margin: 18px 0 0;
+        color: #dce8f8;
+        font-size: 1.16rem;
+      }
+
+      .summary-grid,
+      .card-grid,
+      .two-grid,
+      .kpi-grid,
+      .staff-grid {
+        display: grid;
+        gap: 14px;
+      }
+
+      .summary-grid {
+        grid-template-columns: repeat(4, 1fr);
+        margin-top: 34px;
+      }
+
+      .summary-card,
+      .card,
+      .table-card,
+      .note,
+      .chart-card,
+      .summary-tile,
+      .diagram-panel {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 16px;
+      }
+
+      .summary-card {
+        min-height: 112px;
+        padding: 18px;
+      }
+
+      .summary-card span {
+        display: block;
+        margin-bottom: 12px;
+        color: var(--blue);
+        font-size: 0.75rem;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .summary-card strong {
+        color: var(--ink);
+        font-size: 1.02rem;
+      }
+
+      .section {
+        margin-top: 24px;
+        padding: 34px;
+        background: #fff;
+      }
+
+      .section-head {
+        display: grid;
+        grid-template-columns: minmax(250px, 0.52fr) 1fr;
+        gap: 30px;
+        margin-bottom: 24px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #e6edf5;
+      }
+
+      .section-head h2 {
+        color: var(--ink);
+        font-size: 1.8rem;
+      }
+
+      .section-head p {
+        max-width: 760px;
+        margin: 0;
+        color: var(--muted);
+      }
+
+      .card-grid.four {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .card-grid.two,
+      .two-grid,
+      .kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .staff-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .card {
+        padding: 20px;
+      }
+
+      .card h3 {
+        color: var(--ink);
+        font-size: 1.05rem;
+      }
+
+      .card p,
+      .card li,
+      td,
+      .note p {
+        color: var(--muted);
+      }
+
+      .card ul {
+        padding: 0;
+        margin: 14px 0 0;
+        list-style: none;
+      }
+
+      .card li {
+        position: relative;
+        margin-top: 7px;
+        padding-left: 14px;
+      }
+
+      .card li::before {
+        position: absolute;
+        top: 0.7em;
+        left: 0;
+        width: 5px;
+        height: 5px;
+        content: "";
+        background: var(--blue);
+        border-radius: 999px;
+      }
+
+      .num {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        margin-bottom: 12px;
+        color: #fff;
+        background: var(--blue);
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 900;
+      }
+
+      .note {
+        margin-top: 16px;
+        padding: 18px 20px;
+        background: #f3f8ff;
+      }
+
+      .note strong {
+        display: block;
+        margin-bottom: 6px;
+        color: #17345f;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        table-layout: fixed;
+      }
+
+      th,
+      td {
+        padding: 14px 16px;
+        text-align: left;
+        border-bottom: 1px solid #e7eef6;
+        vertical-align: top;
+        word-break: keep-all;
+        overflow-wrap: anywhere;
+      }
+
+      th {
+        color: #17345f;
+        background: #f0f5fb;
+        font-size: 0.88rem;
+      }
+
+      td {
+        background: #fff;
+      }
+
+      td:first-child {
+        color: #17345f;
+        font-weight: 900;
+      }
+
+      tr:last-child td {
+        border-bottom: 0;
+      }
+
+      .sales-table th:nth-child(1),
+      .sales-table td:nth-child(1) {
+        width: 16%;
+      }
+
+      .sales-table th:nth-child(2),
+      .sales-table td:nth-child(2) {
+        width: 27%;
+      }
+
+      .sales-table th:nth-child(3),
+      .sales-table td:nth-child(3) {
+        width: 57%;
+      }
+
+      .strategy {
+        margin-top: 16px;
+        padding: 20px;
+        color: #fff;
+        background: var(--navy);
+        border-radius: 16px;
+      }
+
+      .strategy h3 {
+        margin-bottom: 14px;
+      }
+
+      .strategy-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+      }
+
+      .strategy-item {
+        padding: 14px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 14px;
+      }
+
+      .strategy-item span {
+        display: block;
+        margin-bottom: 6px;
+        color: #a8c5ee;
+        font-weight: 900;
+      }
+
+      .strategy-item p {
+        margin: 0;
+        color: #eef5ff;
+        font-weight: 700;
+      }
+
+      .timeline-summary,
+      .estimate-summary {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+        margin-bottom: 16px;
+      }
+
+      .summary-tile {
+        padding: 20px;
+        color: #fff;
+        background: var(--navy);
+      }
+
+      .summary-tile span {
+        color: #b8d1f0;
+        font-size: 0.86rem;
+        font-weight: 900;
+      }
+
+      .summary-tile strong {
+        display: block;
+        margin-top: 4px;
+        font-size: 2rem;
+        line-height: 1;
+      }
+
+      .summary-tile p {
+        margin: 8px 0 0;
+        color: #dce8f8;
+      }
+
+      .gantt {
+        padding: 8px;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: 18px;
+      }
+
+      .weeks,
+      .gantt-row {
+        display: grid;
+        grid-template-columns: 230px repeat(10, 1fr);
+        gap: 6px;
+      }
+
+      .weeks {
+        margin-bottom: 8px;
+        color: #60728b;
+        font-size: 0.8rem;
+        font-weight: 900;
+      }
+
+      .weeks span {
+        padding: 8px 0;
+        text-align: center;
+        background: #eaf1f9;
+        border-radius: 8px;
+      }
+
+      .weeks span:first-child {
+        background: transparent;
+      }
+
+      .gantt-row {
+        min-height: 58px;
+        margin-top: 7px;
+      }
+
+      .gantt-label {
+        padding: 11px;
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+      }
+
+      .gantt-label strong {
+        display: block;
+        color: #17345f;
+      }
+
+      .gantt-label small {
+        color: var(--muted);
+      }
+
+      .track {
+        display: grid;
+        grid-column: 2 / span 10;
+        grid-template-columns: repeat(10, 1fr);
+        gap: 6px;
+        padding: 8px 0;
+        background: repeating-linear-gradient(
+          90deg,
+          #f0f4f9 0,
+          #edf3fa calc(10% - 5px),
+          transparent calc(10% - 5px),
+          transparent 10%
+        );
+        border: 1px solid #e2eaf4;
+        border-radius: 12px;
+      }
+
+      .bar {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 38px;
+        color: #fff;
+        background: linear-gradient(135deg, #245a9c, #3b78bd);
+        border-radius: 10px;
+        font-size: 0.82rem;
+        font-weight: 900;
+      }
+
+      .diagram-flow,
+      .diagram-lanes {
+        display: grid;
+        gap: 10px;
+      }
+
+      .diagram-flow {
+        grid-template-columns: repeat(7, 1fr);
+        margin-bottom: 14px;
+      }
+
+      .flow-step,
+      .lane,
+      .node {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 14px;
+      }
+
+      .flow-step {
+        padding: 12px;
+      }
+
+      .flow-step strong {
+        display: block;
+        color: var(--ink);
+        font-size: 0.88rem;
+        line-height: 1.35;
+      }
+
+      .diagram-panel {
+        padding: 20px;
+        background: var(--panel);
+      }
+
+      .diagram-lanes {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .lane {
+        padding: 16px;
+      }
+
+      .lane-label {
+        display: block;
+        margin-bottom: 6px;
+        color: var(--blue);
+        font-size: 0.78rem;
+        font-weight: 900;
+      }
+
+      .lane h3 {
+        margin-bottom: 10px;
+        font-size: 1rem;
+      }
+
+      .node {
+        min-height: 64px;
+        margin-top: 8px;
+        padding: 12px;
+        background: #f8fbff;
+        color: var(--ink);
+        font-weight: 800;
+      }
+
+      .admin {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 14px;
+        padding-top: 14px;
+        border-top: 1px solid #e1e9f4;
+      }
+
+      .badge {
+        color: #fff;
+        background: var(--blue);
+      }
+
+      .pill {
+        color: #244668;
+        background: #eef4fb;
+        border: 1px solid #d8e5f3;
+      }
+
+      .staff-card strong {
+        display: block;
+        color: var(--blue);
+        font-size: 1.9rem;
+      }
+
+      .estimate-table th:nth-child(1),
+      .estimate-table td:nth-child(1) {
+        width: 20%;
+      }
+
+      .estimate-table th:nth-child(2),
+      .estimate-table td:nth-child(2) {
+        width: 45%;
+      }
+
+      .estimate-table th:nth-child(3),
+      .estimate-table td:nth-child(3) {
+        width: 25%;
+      }
+
+      .estimate-table th:nth-child(4),
+      .estimate-table td:nth-child(4) {
+        width: 10%;
+      }
+
+      .amount {
+        text-align: right;
+        white-space: nowrap;
+      }
+
+      .ratio {
+        text-align: center;
+        white-space: nowrap;
+      }
+
+      .bar-chart {
+        display: grid;
+        gap: 12px;
+      }
+
+      .chart-row {
+        display: grid;
+        gap: 6px;
+      }
+
+      .chart-meta {
+        display: flex;
+        justify-content: space-between;
+        color: #425673;
+        font-size: 0.86rem;
+        font-weight: 900;
+      }
+
+      .chart-track {
+        height: 10px;
+        overflow: hidden;
+        background: #e8eff7;
+        border-radius: 999px;
+      }
+
+      .chart-track span {
+        display: block;
+        height: 100%;
+        background: linear-gradient(90deg, #245a9c, #73a7df);
+      }
+
+      .metric {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 12px;
+        align-items: center;
+        padding: 12px;
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+      }
+
+      .metric strong {
+        white-space: nowrap;
+      }
+
+      .conclusion {
+        padding: 28px;
+        color: #fff;
+        background: linear-gradient(135deg, #102a4c, #225d9d);
+        border-radius: 18px;
+      }
+
+      .conclusion p {
+        max-width: 920px;
+        margin: 0;
+        color: #e3edf9;
+      }
+
+      .conclusion p + p {
+        margin-top: 10px;
+        font-weight: 800;
+      }
+
+      @media (max-width: 900px) {
+        .summary-grid,
+        .card-grid.four,
+        .strategy-grid,
+        .diagram-flow,
+        .diagram-lanes,
+        .staff-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+
+        .section-head,
+        .two-grid,
+        .kpi-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 640px) {
+        main {
+          width: min(100% - 24px, 1240px);
+        }
+
+        .hero,
+        .section {
+          padding: 22px;
+        }
+
+        .summary-grid,
+        .card-grid.four,
+        .card-grid.two,
+        .strategy-grid,
+        .diagram-flow,
+        .diagram-lanes,
+        .staff-grid,
+        .estimate-summary,
+        .timeline-summary {
+          grid-template-columns: 1fr;
+        }
+
+        .gantt {
+          overflow-x: auto;
+        }
+
+        .weeks,
+        .gantt-row {
+          min-width: 880px;
+        }
+      }
+
+      @media print {
+        @page {
+          size: A4;
+          margin: 12mm;
+        }
+
+        * {
+          print-color-adjust: exact;
+          -webkit-print-color-adjust: exact;
+        }
+
+        body {
+          background: #fff;
+          font-size: 9.2pt;
+          line-height: 1.4;
+        }
+
+        main {
+          width: 100%;
+          padding: 0;
+        }
+
+        .hero,
+        .section {
+          break-inside: avoid;
+          page-break-inside: avoid;
+          margin-top: 8mm;
+          padding: 8mm;
+          border-radius: 10px;
+          box-shadow: none;
+        }
+
+        .hero {
+          margin-top: 0;
+        }
+
+        h1 {
+          font-size: 24pt;
+        }
+
+        .lead {
+          font-size: 10pt;
+        }
+
+        .section-head {
+          grid-template-columns: 0.46fr 1fr;
+          gap: 16px;
+          margin-bottom: 14px;
+          padding-bottom: 10px;
+        }
+
+        .section-head h2 {
+          font-size: 14pt;
+        }
+
+        .section-head p,
+        p,
+        li,
+        td {
+          font-size: 8pt;
+        }
+
+        .summary-grid,
+        .card-grid,
+        .strategy-grid,
+        .diagram-flow,
+        .diagram-lanes,
+        .staff-grid,
+        .kpi-grid {
+          gap: 7px;
+        }
+
+        .summary-card,
+        .card,
+        .strategy-item,
+        .lane,
+        .node,
+        .summary-tile,
+        .chart-card {
+          padding: 8px;
+          break-inside: avoid;
+        }
+
+        table {
+          min-width: 0;
+          table-layout: fixed;
+        }
+
+        th,
+        td {
+          padding: 6px;
+          font-size: 7.6pt;
+        }
+
+        .weeks,
+        .gantt-row {
+          grid-template-columns: 135px repeat(10, 1fr);
+          gap: 3px;
+        }
+
+        .weeks {
+          font-size: 6.8pt;
+        }
+
+        .gantt-label {
+          padding: 6px;
+        }
+
+        .gantt-label strong,
+        .bar,
+        .flow-step strong,
+        .node,
+        .lane h3 {
+          font-size: 7.2pt;
+        }
+
+        .track {
+          gap: 3px;
+          padding: 5px 0;
+        }
+
+        .bar {
+          min-height: 24px;
+        }
+
+        .flow-step {
+          padding: 6px;
+        }
+
+        .diagram-panel {
+          padding: 8px;
+        }
+
+        .summary-tile strong {
+          font-size: 16pt;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header class="hero">
+        <div class="meta">
+          <span>AX CIC 내부 검토용</span>
+          <span>On-prem RAG Chatbot 구축 제안</span>
+        </div>
+        <p class="eyebrow">Executive Proposal</p>
+        <h1>A사 On-prem RAG Chatbot 구축 사업 기획안</h1>
+        <p class="lead">
+          보안 요구사항을 충족하면서 사내 지식 검색 비용을 줄이는 AX 인프라 구축 사업 제안서입니다.
+          초기 MVP 범위를 통제해 빠른 전사 베타 오픈과 이후 확산을 함께 고려합니다.
+        </p>
+        <div class="summary-grid">
+          <article class="summary-card"><span>Security</span><strong>On-prem / 외부 API 미사용</strong></article>
+          <article class="summary-card"><span>Schedule</span><strong>2주 컨설팅 + 10주 MVP 구축</strong></article>
+          <article class="summary-card"><span>Governance</span><strong>보안/권한/출처/운영체계 포함</strong></article>
+          <article class="summary-card"><span>Expansion</span><strong>MVP 후 전사 확산</strong></article>
+        </div>
+      </header>
+
+      <section class="section">
+        <div class="section-head">
+          <div><p class="eyebrow">01. 사업 개요 및 추진 방향</p><h2>보안 요구사항을 충족하는 사내 지식 활용 인프라 구축</h2></div>
+          <p>A사는 내부 문서 기반의 RAG Chatbot을 On-prem 환경에서 구축하고, 빠른 시일 내 전사적으로 도입하고자 한다. 본 사업은 단순 챗봇 개발이 아니라 보안 요구사항을 충족하면서 사내 지식 검색 비용을 줄이는 AX 인프라 구축 사업으로 정의한다.</p>
+        </div>
+        <div class="note">
+          <strong>사업 정의</strong>
+          <p>On-prem RAG 구축은 일반 SaaS형 챗봇 도입과 달리 내부 보안 정책, 문서 접근 권한, 문서 품질, 답변 정확도, 운영 체계까지 함께 고려해야 한다.</p>
+        </div>
+        <div class="card-grid four" style="margin-top: 14px">
+          <article class="card"><span class="num">01</span><h3>내부망 기반 On-prem RAG</h3><p>외부 API 호출 없이 내부망에서 동작하는 On-prem RAG 구조를 구축한다.</p></article>
+          <article class="card"><span class="num">02</span><h3>MVP 대상 범위 통제</h3><p>전사 전체 문서를 한 번에 대상으로 하지 않고 활용성과 문서 품질이 높은 영역부터 적용한다.</p></article>
+          <article class="card"><span class="num">03</span><h3>실사용 가능한 운영 구조</h3><p>답변 출처, 권한 제어, 오답 신고, 운영 로그를 포함한 구조를 설계한다.</p></article>
+          <article class="card"><span class="num">04</span><h3>성과 기반 전사 확산</h3><p>MVP 성과를 기반으로 전사 확산 범위를 단계적으로 확대한다.</p></article>
+        </div>
+        <div class="note">
+          <strong>추진 접근</strong>
+          <p>A사의 “빠른 전사 도입” 요구는 단순 일정 단축보다 초기 범위를 통제한 전사 베타 오픈 방식으로 접근한다. 이를 통해 보안 및 품질 리스크를 관리하면서 빠른 도입 효과를 제공한다.</p>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <div><p class="eyebrow">02. Sales Strategy</p><h2>세일즈 전략</h2></div>
+          <p>본 사업의 세일즈 메시지는 최신 AI 모델 도입이 아니라, 보안 정책을 준수하면서 전사 지식 활용 효율을 높이는 업무 생산성 개선 프로젝트로 가져간다.</p>
+        </div>
+        <div class="table-card">
+          <table class="sales-table">
+            <thead><tr><th>대상</th><th>주요 관심사</th><th>제안 메시지</th></tr></thead>
+            <tbody>
+              <tr><td>경영진</td><td>전사 생산성, 도입 효과</td><td>문서 검색 시간과 반복 문의를 줄이는 AX 기반 생산성 개선</td></tr>
+              <tr><td>보안/IT 조직</td><td>데이터 반출, 권한 통제</td><td>On-prem, 외부 API 미사용, 사용자 권한 기반 문서 접근 제어</td></tr>
+              <tr><td>현업 부서</td><td>실제 사용성</td><td>자연어 질의, 출처 기반 답변, 담당자 문의 감소</td></tr>
+              <tr><td>운영 조직</td><td>유지관리 부담</td><td>관리자 기능, 로그 분석, 오답 개선 프로세스 제공</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="strategy">
+          <h3>수주 전략</h3>
+          <div class="strategy-grid">
+            <div class="strategy-item"><span>01</span><p>2주 사전 진단 + 10주 MVP 구축 구조로 제안</p></div>
+            <div class="strategy-item"><span>02</span><p>HR/IT/정책 등 반복 질문이 많고 문서 기준이 명확한 영역 우선 적용</p></div>
+            <div class="strategy-item"><span>03</span><p>PoC 수준의 일회성 검증이 아니라 전사 베타 오픈 가능한 MVP로 포지셔닝</p></div>
+            <div class="strategy-item"><span>04</span><p>MVP 성과 지표를 기반으로 2차 확산 사업 연결</p></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <div><p class="eyebrow">03. Differentiator Factor</p><h2>Differentiator Factor</h2></div>
+          <p>AX CIC의 차별화는 On-prem 설치 가능성보다 보안 운영, MVP 범위 통제, 품질 개선 구조, 확산 가이드까지 포함한 실행 체계를 제공하는 데 있다.</p>
+        </div>
+        <div class="card-grid two">
+          <article class="card"><span class="num">01</span><h3>Security-first On-prem 구축</h3><p>보안 운영까지 고려한 RAG 구조를 제공한다.</p><ul><li>외부 LLM API 미사용</li><li>내부망 내 데이터 처리</li><li>사용자 권한 기반 문서 검색 제한</li><li>질문/답변/문서 조회 로그 기록</li><li>민감 문서 별도 인덱싱 정책 적용</li><li>권한 외 문서가 답변에 포함되지 않도록 검색 단계에서 제어</li></ul></article>
+          <article class="card"><span class="num">02</span><h3>빠른 도입을 위한 MVP 범위 통제</h3><p>초기 범위를 통제해 문서 품질, 권한, 최신성 이슈로 인한 일정과 품질 리스크를 관리한다.</p><ul><li>반복 질문이 많은 문서</li><li>최신성이 관리되고 있는 문서</li><li>문서 소유 부서가 명확한 문서</li><li>답변 기준이 문서 안에 명확히 존재하는 문서</li><li>사용자 권한 구조가 비교적 단순한 문서</li><li>우선 적용 예시: HR, IT, 총무/정책</li></ul></article>
+          <article class="card"><span class="num">03</span><h3>RAG 품질 운영 체계</h3><p>운영 중 품질을 개선할 수 있는 구조를 함께 제안한다.</p><ul><li>답변 출처 문서 제공</li><li>신뢰도 낮은 답변 제한</li><li>검색 결과가 불충분한 경우 fallback 처리</li><li>사용자 오답 신고 기능</li><li>관리자 검토 후 문서 수정/제외/재인덱싱 처리</li><li>주요 질문 로그 기반 문서 개선</li></ul></article>
+          <article class="card"><span class="num">04</span><h3>전사 확산 플레이북 제공</h3><p>MVP 이후 내부 조직 단위로 RAG 활용 범위를 확장할 수 있도록 한다.</p><ul><li>부서별 문서 온보딩 체크리스트</li><li>사용자 교육 가이드</li><li>운영자 매뉴얼</li><li>KPI 리포트 템플릿</li><li>확산 우선순위 기준</li></ul></article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <div><p class="eyebrow">04. Pre-consulting</p><h2>개발 전 AX 컨설팅 방향 및 타임라인</h2></div>
+          <p>개발 착수 전 컨설팅의 목적은 단순 요구사항 수집이 아니라, 개발 실패 가능성을 낮추기 위한 범위·권한·품질 기준 확정이다.</p>
+        </div>
+        <div class="two-grid">
+          <div class="card">
+            <h3>컨설팅 타임라인</h3>
+            <ul><li><strong>데이터/보안 진단(1주)</strong> 문서 위치, 유형, 권한, 보안 등급 파악 / 데이터 맵, 보안 체크리스트</li><li><strong>Use Case 정의(3일)</strong> 반복 질문, 우선 적용 부서, MVP 범위 정의 / MVP 범위 정의서</li><li><strong>품질 기준 설계(2일)</strong> 테스트 질문셋, 답변 기준, 실패 처리 방식 정의 / RAG 평가 기준, 테스트셋</li><li><strong>실행 계획 확정(2일)</strong> 일정, 인력, 리스크, 오픈 기준 확정 / 구축 WBS, 리스크 관리표</li></ul>
+          </div>
+          <div class="card">
+            <h3>컨설팅 핵심 확인 항목</h3>
+            <ul><li>어떤 문서를 MVP 대상으로 우선 적용할 것인가</li><li>문서별 소유 부서와 최신성 관리 책임자는 누구인가</li><li>사용자별 문서 접근 권한은 어떤 기준으로 나뉘는가</li><li>답변에 반드시 출처 표시가 필요한가</li><li>답변하지 않아야 하는 질문 유형은 무엇인가</li><li>전사 베타 오픈 기준은 무엇인가</li><li>오답/미응답 발생 시 운영 담당자는 누구인가</li></ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <div><p class="eyebrow">05. Build Timeline</p><h2>구축 타임라인</h2></div>
+          <p>사전 컨설팅 2주 이후, 실제 구축은 10주 내 MVP 구축 및 전사 베타 오픈을 목표로 한다.</p>
+        </div>
+        <div class="timeline-summary">
+          <div class="summary-tile"><span>Pre-consulting</span><strong>2주</strong><p>범위·권한·품질 기준 확정</p></div>
+          <div class="summary-tile"><span>MVP Build</span><strong>10주</strong><p>구축 및 전사 베타 오픈</p></div>
+        </div>
+        <div class="gantt">
+          <div class="weeks"><span></span><span>W1</span><span>W2</span><span>W3</span><span>W4</span><span>W5</span><span>W6</span><span>W7</span><span>W8</span><span>W9</span><span>W10</span></div>
+          <div class="gantt-row"><div class="gantt-label"><strong>인프라/보안 설계</strong><small>On-prem 서버 환경 구성, 네트워크/권한 정책 반영</small></div><div class="track"><span class="bar" style="grid-column: 1 / span 2">W1~W2</span></div></div>
+          <div class="gantt-row"><div class="gantt-label"><strong>문서 파이프라인 구축</strong><small>문서 수집, 정제, Chunking, Embedding, Vector DB 구성</small></div><div class="track"><span class="bar" style="grid-column: 3 / span 2">W3~W4</span></div></div>
+          <div class="gantt-row"><div class="gantt-label"><strong>RAG API/챗봇 MVP</strong><small>질문 입력, 문서 검색, 답변 생성, 출처 표시 구현</small></div><div class="track"><span class="bar" style="grid-column: 5 / span 2">W5~W6</span></div></div>
+          <div class="gantt-row"><div class="gantt-label"><strong>관리자/운영 기능</strong><small>문서 상태, 질문 로그, 오답 신고, 피드백 관리</small></div><div class="track"><span class="bar" style="grid-column: 7 / span 2">W7~W8</span></div></div>
+          <div class="gantt-row"><div class="gantt-label"><strong>품질 검증</strong><small>테스트 질문셋 기반 답변 품질, 권한, 미응답 검증</small></div><div class="track"><span class="bar" style="grid-column: 9 / span 1">W9</span></div></div>
+          <div class="gantt-row"><div class="gantt-label"><strong>전사 베타 오픈</strong><small>사용자 교육, 운영자 매뉴얼 제공, 초기 안정화</small></div><div class="track"><span class="bar" style="grid-column: 10 / span 1">W10</span></div></div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head">
+          <div><p class="eyebrow">06. Architecture</p><h2>On-prem RAG 구조 다이어그램</h2></div>
+          <p>사용자 질문부터 권한 확인, 문서 검색, 답변 생성, 로그 및 운영 관리까지의 흐름을 On-prem 환경 기준으로 시각화했다.</p>
+        </div>
+        <div class="diagram-flow">
+          <div class="flow-step"><span class="num">01</span><strong>사용자 질문</strong></div>
+          <div class="flow-step"><span class="num">02</span><strong>인증/권한 확인</strong></div>
+          <div class="flow-step"><span class="num">03</span><strong>문서 검색(Vector DB)</strong></div>
+          <div class="flow-step"><span class="num">04</span><strong>관련 문서 추출</strong></div>
+          <div class="flow-step"><span class="num">05</span><strong>답변 생성</strong></div>
+          <div class="flow-step"><span class="num">06</span><strong>출처 포함 응답</strong></div>
+          <div class="flow-step"><span class="num">07</span><strong>로그 저장 / 오답 신고</strong></div>
+        </div>
+        <div class="diagram-panel">
+          <div class="diagram-lanes">
+            <div class="lane"><span class="lane-label">User Layer</span><h3>사용자 접점</h3><div class="node">사용자 질문</div><div class="node">출처 포함 응답</div></div>
+            <div class="lane"><span class="lane-label">Security Layer</span><h3>보안/권한</h3><div class="node">인증/권한 확인</div><div class="node">권한 기반 문서 검색 제한</div></div>
+            <div class="lane"><span class="lane-label">Retrieval Layer</span><h3>검색/문서 처리</h3><div class="node">문서 검색(Vector DB)</div><div class="node">관련 문서 추출</div></div>
+            <div class="lane"><span class="lane-label">Generation Layer</span><h3>답변/운영</h3><div class="node">답변 생성</div><div class="node">로그 저장 / 오답 신고</div></div>
+          </div>
+          <div class="admin"><span class="badge">관리자 기능</span><span class="pill">문서 관리</span><span class="pill">재인덱싱</span><span class="pill">피드백 관리</span></div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head"><div><p class="eyebrow">07. Team</p><h2>필요 인력</h2></div><p>10주 MVP 구축 및 전사 베타 오픈을 목표로 역할별 책임을 명확히 분리한다.</p></div>
+        <div class="staff-grid">
+          <article class="card staff-card"><h3>Project Manager</h3><strong>1</strong><p>범위, 일정, 고객 커뮤니케이션, 리스크 관리</p></article>
+          <article class="card staff-card"><h3>AI/RAG Engineer</h3><strong>2</strong><p>RAG 파이프라인, Embedding, 검색 품질 개선</p></article>
+          <article class="card staff-card"><h3>Backend Engineer</h3><strong>1</strong><p>API, 인증/권한, 사내 시스템 연동</p></article>
+          <article class="card staff-card"><h3>Frontend Engineer</h3><strong>1</strong><p>챗봇 UI, 관리자 UI 구현</p></article>
+          <article class="card staff-card"><h3>Infra/Security Engineer</h3><strong>1</strong><p>On-prem 배포, 네트워크, 보안 설정</p></article>
+          <article class="card staff-card"><h3>QA/Tester</h3><strong>0.5</strong><p>테스트셋 검증, 권한/응답 품질 테스트</p></article>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head"><div><p class="eyebrow">08. Estimate</p><h2>고객사 전달 견적서</h2></div><p>본 견적은 A사 내부 인프라 및 HW/GPU 구매 비용을 제외하고, AX CIC의 컨설팅, 구축, 품질 검증, 교육 및 안정화 비용을 기준으로 산정한다.</p></div>
+        <div class="estimate-summary"><div class="summary-tile"><span>최종 견적</span><strong>330,000,000원</strong><p>VAT 별도</p></div><div class="summary-tile"><span>유지보수 제안</span><strong>월 8,000,000원</strong><p>VAT 별도</p></div></div>
+        <div class="two-grid">
+          <div class="table-card">
+            <table class="estimate-table">
+              <thead><tr><th>항목</th><th>내용</th><th class="amount">금액</th><th class="ratio">비중</th></tr></thead>
+              <tbody>
+                <tr><td>사전 AX 컨설팅</td><td>데이터/보안 진단, Use Case 정의, MVP 범위 확정</td><td class="amount">30,000,000원</td><td class="ratio">9%</td></tr>
+                <tr><td>RAG 시스템 구축</td><td>문서 파이프라인, Vector DB, RAG API, 챗봇 UI 구축</td><td class="amount">150,000,000원</td><td class="ratio">45%</td></tr>
+                <tr><td>On-prem/보안 연동</td><td>내부망 배포, 인증/권한, 로그, 보안 정책 반영</td><td class="amount">55,000,000원</td><td class="ratio">17%</td></tr>
+                <tr><td>관리자/운영 기능</td><td>문서 관리, 질문 로그, 오답 신고, 피드백 관리</td><td class="amount">35,000,000원</td><td class="ratio">11%</td></tr>
+                <tr><td>품질 검증/안정화</td><td>테스트셋 검증, 권한 테스트, 전사 베타 안정화</td><td class="amount">35,000,000원</td><td class="ratio">11%</td></tr>
+                <tr><td>교육/운영 문서</td><td>사용자 가이드, 운영자 매뉴얼, 부서 확산 가이드</td><td class="amount">25,000,000원</td><td class="ratio">8%</td></tr>
+                <tr><td>합계</td><td>컨설팅, 구축, 검증, 교육 및 안정화 비용</td><td class="amount">330,000,000원</td><td class="ratio">100%</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="card chart-card">
+            <h3>항목별 금액 비중</h3>
+            <div class="bar-chart">
+              <div class="chart-row"><div class="chart-meta"><span>사전 AX 컨설팅</span><strong>9%</strong></div><div class="chart-track"><span style="width: 9%"></span></div></div>
+              <div class="chart-row"><div class="chart-meta"><span>RAG 시스템 구축</span><strong>45%</strong></div><div class="chart-track"><span style="width: 45%"></span></div></div>
+              <div class="chart-row"><div class="chart-meta"><span>On-prem/보안 연동</span><strong>17%</strong></div><div class="chart-track"><span style="width: 17%"></span></div></div>
+              <div class="chart-row"><div class="chart-meta"><span>관리자/운영 기능</span><strong>11%</strong></div><div class="chart-track"><span style="width: 11%"></span></div></div>
+              <div class="chart-row"><div class="chart-meta"><span>품질 검증/안정화</span><strong>11%</strong></div><div class="chart-track"><span style="width: 11%"></span></div></div>
+              <div class="chart-row"><div class="chart-meta"><span>교육/운영 문서</span><strong>8%</strong></div><div class="chart-track"><span style="width: 8%"></span></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="note"><strong>유지보수 포함 항목</strong><p><span class="pill">운영 로그 분석</span> <span class="pill">문서 인덱싱 이슈 대응</span> <span class="pill">답변 품질 개선</span> <span class="pill">월간 리포트 제공</span> <span class="pill">경미한 기능 개선 포함</span></p></div>
+      </section>
+
+      <section class="section">
+        <div class="section-head"><div><p class="eyebrow">09. Success Criteria</p><h2>KPI 및 성공 기준</h2></div><p>MVP 성공 기준과 전사 확산 판단 기준을 분리해 구축 완료 이후의 평가와 확산 의사결정에 활용한다.</p></div>
+        <div class="kpi-grid">
+          <div class="card"><h3>MVP 성공 기준</h3><div class="metric"><span>테스트 질문셋 기준 유효 답변률</span><strong>70% 이상</strong></div><div class="metric"><span>답변 출처 표시율</span><strong>95% 이상</strong></div><div class="metric"><span>권한 외 문서 노출</span><strong>0건</strong></div><div class="metric"><span>Low confidence 질문 fallback 처리율</span><strong>95% 이상</strong></div></div>
+          <div class="card"><h3>전사 확산 기준</h3><div class="metric"><span>주요 부서 사용자 만족도</span><strong>4.0/5.0 이상</strong></div><div class="metric"><span>반복 문의 감소</span><strong>30% 이상</strong></div><div class="metric"><span>문서 검색 소요 시간 감소</span><strong>30% 이상</strong></div><div class="metric"><span>월간 활성 사용자 및 재사용률</span><strong>증가</strong></div></div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-head"><div><p class="eyebrow">Conclusion</p><h2>결론</h2></div><p></p></div>
+        <div class="conclusion">
+          <p>본 사업은 A사의 보안 요구사항을 전제로 하되, 빠른 도입을 위해 MVP 범위를 명확히 통제하는 방식으로 추진한다.</p>
+          <p>AX CIC는 단순 RAG Chatbot 구축사가 아니라, A사의 내부 지식 활용 구조를 재설계하고 전사 AX 확산까지 연결하는 실행 파트너로 포지셔닝한다.</p>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
