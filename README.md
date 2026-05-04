@@ -15,4 +15,14 @@ npm run dev
 npm run build
 ```
 
+## 배포
+
+GitHub Pages 배포 워크플로가 포함되어 있습니다. `main` 브랜치에 반영되면 GitHub Actions가 Vite 앱을 빌드해 Pages artifact로 업로드합니다.
+
+예상 공개 경로:
+
+```text
+https://uuboogie0911.github.io/wrtn/
+```
+
 > 현재 프로젝트는 Vite 기반입니다. 실행 환경에 Node.js와 npm이 설치되어 있어야 합니다.
