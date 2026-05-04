@@ -27,7 +27,7 @@ export function Estimate() {
 
       <div className="estimate-layout">
         <div className="table-card">
-          <table>
+          <table className="estimate-table">
             <thead>
               <tr>
                 <th>항목</th>

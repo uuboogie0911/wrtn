@@ -27,18 +27,20 @@ body {
     linear-gradient(90deg, rgba(47, 104, 178, 0.045) 1px, transparent 1px),
     linear-gradient(180deg, #f8fafc 0%, #eef3f9 100%);
   background-size: 28px 28px, auto;
+  color: var(--ink);
+  word-break: keep-all;
 }
 
 main {
-  width: min(1280px, calc(100% - 56px));
+  width: min(1240px, calc(100% - 56px));
   margin: 0 auto;
-  padding: 40px 0 84px;
+  padding: 36px 0 80px;
 }
 
 .hero {
   overflow: hidden;
   position: relative;
-  padding: 52px;
+  padding: 46px 48px;
   color: #ffffff;
   background:
     linear-gradient(135deg, rgba(13, 36, 68, 0.98), rgba(31, 86, 148, 0.94)),
@@ -82,7 +84,7 @@ main {
 
 .hero h1 {
   margin: 0;
-  font-size: clamp(2.4rem, 4.8vw, 4.65rem);
+  font-size: clamp(2.25rem, 4.5vw, 4.25rem);
   line-height: 1.08;
   letter-spacing: -0.07em;
 }
@@ -165,8 +167,8 @@ main {
 }
 
 .section {
-  margin-top: 26px;
-  padding: 36px;
+  margin-top: 24px;
+  padding: 32px;
   background: #ffffff;
   border: 1px solid #d9e2ef;
   border-radius: 26px;
@@ -177,15 +179,15 @@ main {
   display: grid;
   grid-template-columns: minmax(260px, 0.55fr) minmax(0, 1fr);
   gap: 32px;
-  margin-bottom: 28px;
-  padding-bottom: 24px;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
   border-bottom: 1px solid #e6edf5;
 }
 
 .section-heading h2 {
   margin: 0;
   color: #132b4d;
-  font-size: clamp(1.55rem, 2.4vw, 2.08rem);
+  font-size: clamp(1.48rem, 2.2vw, 1.96rem);
   letter-spacing: -0.045em;
 }
 
@@ -364,22 +366,22 @@ main {
 
 table {
   width: 100%;
-  min-width: 760px;
+  min-width: 720px;
   border-collapse: separate;
   border-spacing: 0;
+  table-layout: fixed;
 }
 
 th,
 td {
-  padding: 16px 18px;
+  padding: 14px 16px;
   text-align: left;
   border-bottom: 1px solid #e7eef6;
   vertical-align: top;
+  overflow-wrap: anywhere;
 }
 
 th {
-  position: sticky;
-  top: 0;
   color: #17345f;
   background: #f0f5fb;
   font-size: 0.88rem;
@@ -1047,5 +1049,389 @@ tr:last-child td {
 
   .metric-row {
     grid-template-columns: 1fr;
+  }
+}
+
+@media print {
+  @page {
+    size: A4;
+    margin: 12mm;
+  }
+
+  :root {
+    color: #142033;
+    background: #ffffff;
+    font-size: 9.5pt;
+    line-height: 1.42;
+  }
+
+  * {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  body {
+    min-width: 0;
+    background: #ffffff;
+  }
+
+  main {
+    width: 100%;
+    padding: 0;
+  }
+
+  .hero,
+  .section {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    margin-top: 9mm;
+    box-shadow: none;
+  }
+
+  .hero {
+    margin-top: 0;
+    padding: 10mm;
+    border-radius: 12px;
+  }
+
+  .hero::after {
+    display: none;
+  }
+
+  .hero h1 {
+    font-size: 25pt;
+    letter-spacing: -0.055em;
+  }
+
+  .hero__lead {
+    max-width: none;
+    font-size: 10.5pt;
+  }
+
+  .hero__grid {
+    gap: 8px;
+    margin-top: 8mm;
+  }
+
+  .summary-card {
+    min-height: 0;
+    padding: 10px;
+    box-shadow: none;
+  }
+
+  .summary-card__label {
+    margin-bottom: 6px;
+    font-size: 7pt;
+  }
+
+  .summary-card strong {
+    font-size: 8.7pt;
+    line-height: 1.35;
+  }
+
+  .section {
+    padding: 8mm;
+    border-radius: 12px;
+  }
+
+  .section-heading {
+    grid-template-columns: 0.48fr 1fr;
+    gap: 18px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+  }
+
+  .section-heading h2 {
+    font-size: 15pt;
+    line-height: 1.22;
+  }
+
+  .section-heading p {
+    max-width: none;
+    font-size: 9pt;
+    line-height: 1.5;
+  }
+
+  .eyebrow {
+    font-size: 7.3pt;
+  }
+
+  .direction-card,
+  .differentiator-card,
+  .staff-card,
+  .strategy-step,
+  .timeline-card,
+  .check-card,
+  .chart-card,
+  .maintenance-card,
+  .kpi-card,
+  .definition-card,
+  .notice-block,
+  .table-card,
+  .architecture-panel {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    box-shadow: none;
+  }
+
+  .card-grid,
+  .differentiator-grid,
+  .staff-grid,
+  .kpi-grid,
+  .strategy-grid {
+    gap: 10px;
+  }
+
+  .direction-card,
+  .differentiator-card,
+  .staff-card,
+  .strategy-step {
+    padding: 12px;
+  }
+
+  .direction-card h3,
+  .differentiator-card h3,
+  .strategy-panel h3,
+  .timeline-card h3,
+  .check-card h3,
+  .chart-card h3,
+  .maintenance-card h3,
+  .kpi-card h3 {
+    font-size: 10.5pt;
+    line-height: 1.25;
+  }
+
+  p,
+  li,
+  td,
+  .strategy-step p {
+    font-size: 8.3pt;
+    line-height: 1.42;
+  }
+
+  .definition-card,
+  .notice-block,
+  .strategy-panel,
+  .timeline-summary,
+  .estimate-summary,
+  .maintenance-card {
+    margin-bottom: 10px;
+  }
+
+  .definition-card {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 12px;
+  }
+
+  .table-card,
+  .timeline-shell,
+  .architecture-panel {
+    overflow: visible;
+  }
+
+  table {
+    min-width: 0;
+    width: 100%;
+    table-layout: fixed;
+  }
+
+  th,
+  td {
+    padding: 7px 8px;
+    word-break: keep-all;
+    overflow-wrap: anywhere;
+  }
+
+  th {
+    position: static;
+    font-size: 8pt;
+  }
+
+  .sales-table th:nth-child(1),
+  .sales-table td:nth-child(1) {
+    width: 16%;
+  }
+
+  .sales-table th:nth-child(2),
+  .sales-table td:nth-child(2) {
+    width: 27%;
+  }
+
+  .sales-table th:nth-child(3),
+  .sales-table td:nth-child(3) {
+    width: 57%;
+  }
+
+  .estimate-table th:nth-child(1),
+  .estimate-table td:nth-child(1) {
+    width: 20%;
+  }
+
+  .estimate-table th:nth-child(2),
+  .estimate-table td:nth-child(2) {
+    width: 45%;
+  }
+
+  .estimate-table th:nth-child(3),
+  .estimate-table td:nth-child(3) {
+    width: 25%;
+  }
+
+  .estimate-table th:nth-child(4),
+  .estimate-table td:nth-child(4) {
+    width: 10%;
+  }
+
+  .timeline-summary > div,
+  .summary-tile {
+    padding: 12px;
+  }
+
+  .timeline-summary strong,
+  .estimate-summary strong {
+    font-size: 17pt;
+  }
+
+  .week-header {
+    min-width: 0;
+    margin-left: 150px;
+    gap: 3px;
+    font-size: 7pt;
+  }
+
+  .week-header span {
+    padding: 5px 0;
+    border-radius: 5px;
+  }
+
+  .gantt-list {
+    min-width: 0;
+    gap: 5px;
+  }
+
+  .gantt-row {
+    grid-template-columns: 150px minmax(0, 1fr);
+    gap: 5px;
+  }
+
+  .gantt-label {
+    padding: 7px;
+    border-radius: 8px;
+  }
+
+  .gantt-label strong {
+    font-size: 8.5pt;
+    line-height: 1.25;
+  }
+
+  .gantt-label span,
+  .gantt-label p {
+    font-size: 7pt;
+  }
+
+  .weeks-grid {
+    gap: 3px;
+  }
+
+  .gantt-track {
+    min-height: 42px;
+    padding: 6px 0;
+    border-radius: 8px;
+  }
+
+  .gantt-bar {
+    min-height: 28px;
+    border-radius: 7px;
+    font-size: 7pt;
+  }
+
+  .flow-strip {
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 5px;
+  }
+
+  .flow-step {
+    min-height: 0;
+    padding: 8px;
+    border-radius: 8px;
+  }
+
+  .flow-number {
+    width: 21px;
+    height: 21px;
+    margin-bottom: 6px;
+    font-size: 6.5pt;
+  }
+
+  .flow-step strong {
+    font-size: 7.2pt;
+    line-height: 1.28;
+  }
+
+  .architecture-lanes {
+    min-width: 0;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 7px;
+  }
+
+  .architecture-lane {
+    gap: 7px;
+    padding: 10px;
+    border-radius: 10px;
+  }
+
+  .architecture-lane::after {
+    display: none;
+  }
+
+  .lane-label {
+    font-size: 6.8pt;
+  }
+
+  .architecture-node {
+    min-height: 0;
+    padding: 8px;
+    border-radius: 8px;
+  }
+
+  .architecture-node strong {
+    font-size: 8pt;
+    line-height: 1.3;
+  }
+
+  .bar-row {
+    margin-top: 8px;
+  }
+
+  .bar-label {
+    font-size: 7.7pt;
+  }
+
+  .bar-track {
+    height: 8px;
+  }
+
+  .pill,
+  .badge,
+  .ratio-badge {
+    font-size: 7pt;
+    padding: 3px 6px;
+  }
+
+  .metric-row {
+    padding: 8px;
+  }
+
+  .metric-row strong {
+    font-size: 9pt;
+  }
+
+  .conclusion-card {
+    padding: 14px;
+  }
+
+  .conclusion-card p {
+    font-size: 9.3pt;
   }
 }

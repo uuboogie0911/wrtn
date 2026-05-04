@@ -8,7 +8,7 @@ export function SalesStrategy() {
       title="세일즈 전략"
       description="본 사업의 세일즈 메시지는 최신 AI 모델 도입이 아니라, 보안 정책을 준수하면서 전사 지식 활용 효율을 높이는 업무 생산성 개선 프로젝트로 가져간다."
     >
-      <div className="table-card">
+      <div className="table-card sales-table">
         <table>
           <thead>
             <tr>
