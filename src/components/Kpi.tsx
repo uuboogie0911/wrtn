@@ -13,8 +13,9 @@ export function Kpi() {
         {kpiGroups.map((group) => (
           <article className="kpi-card" key={group.title}>
             <div className="kpi-card__head">
-              <span>{group.label}</span>
+              <span>{group.title}</span>
               <h3>{group.title}</h3>
+              <p>{group.description}</p>
             </div>
             <div className="metric-grid">
               {group.metrics.map((item) => (

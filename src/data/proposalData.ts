@@ -144,10 +144,10 @@ export const ragFlow = [
 ];
 
 export const adminLoop = [
-  '문서 관리',
-  '재인덱싱',
-  '피드백 관리',
-  '로그 분석',
+  { title: '문서 관리', caption: '문서 상태와 소유 부서 관리' },
+  { title: '재인덱싱', caption: '수정/제외 문서 재처리' },
+  { title: '피드백 관리', caption: '오답 신고 검토 및 조치' },
+  { title: '로그 분석', caption: '주요 질문 기반 개선 과제 도출' },
 ];
 
 export const consultingSteps = [
@@ -286,6 +286,7 @@ export const maintenanceItems = [
 
 export const kpiGroups = [
   {
+    label: 'MVP Gate',
     title: 'MVP 성공 기준',
     description: '구축 완료 이후 MVP가 전사 베타 오픈 가능한 상태인지 판단하는 기준',
     metrics: [
@@ -296,6 +297,7 @@ export const kpiGroups = [
     ],
   },
   {
+    label: 'Scale Gate',
     title: '전사 확산 기준',
     description: 'MVP 이후 2차 확산 사업으로 연결할 수 있는 운영 성과 기준',
     metrics: [
