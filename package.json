@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
     "typescript": "latest",
     "vite": "latest",
     "react": "latest",
