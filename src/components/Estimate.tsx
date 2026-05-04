@@ -12,13 +12,13 @@ export function Estimate() {
       title="고객사 전달 견적서"
       description="본 견적은 A사 내부 인프라 및 HW/GPU 구매 비용을 제외하고, AX CIC의 컨설팅, 구축, 품질 검증, 교육 및 안정화 비용을 기준으로 산정한다."
     >
-      <div className="estimate-summary">
-        <div>
+      <div className="estimate-summary executive-summary">
+        <div className="summary-tile primary">
           <span className="label">최종 견적</span>
           <strong>{formatWon(total)}</strong>
           <span>VAT 별도</span>
         </div>
-        <div>
+        <div className="summary-tile">
           <span className="label">유지보수 제안</span>
           <strong>월 8,000,000원</strong>
           <span>VAT 별도</span>
@@ -32,21 +32,31 @@ export function Estimate() {
               <tr>
                 <th>항목</th>
                 <th>내용</th>
-                <th>금액</th>
+                <th className="amount-cell">금액</th>
+                <th className="ratio-cell">비중</th>
               </tr>
             </thead>
             <tbody>
-              {estimateItems.map((item) => (
-                <tr key={item.item}>
-                  <td>{item.item}</td>
-                  <td>{item.content}</td>
-                  <td>{formatWon(item.amount)}</td>
-                </tr>
-              ))}
+              {estimateItems.map((item) => {
+                const percent = Math.round((item.amount / total) * 100);
+                return (
+                  <tr key={item.item}>
+                    <td>
+                      <strong>{item.item}</strong>
+                    </td>
+                    <td>{item.content}</td>
+                    <td className="amount-cell">{formatWon(item.amount)}</td>
+                    <td className="ratio-cell">
+                      <span className="ratio-badge">{percent}%</span>
+                    </td>
+                  </tr>
+                );
+              })}
               <tr className="total-row">
                 <td>합계</td>
                 <td>컨설팅, 구축, 검증, 교육 및 안정화 비용</td>
-                <td>{formatWon(total)}</td>
+                <td className="amount-cell">{formatWon(total)}</td>
+                <td className="ratio-cell">100%</td>
               </tr>
             </tbody>
           </table>

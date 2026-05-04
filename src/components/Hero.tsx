@@ -3,8 +3,12 @@ import { heroHighlights } from '../data/proposalData';
 export function Hero() {
   return (
     <header className="hero">
+      <div className="hero__meta">
+        <span>AX CIC 내부 검토용</span>
+        <span>On-prem RAG Chatbot 구축 제안</span>
+      </div>
       <div className="hero__content">
-        <p className="eyebrow">AX CIC 내부 검토용</p>
+        <p className="eyebrow">Executive Proposal</p>
         <h1>A사 On-prem RAG Chatbot 구축 사업 기획안</h1>
         <p className="hero__lead">
           보안 요구사항을 충족하면서 사내 지식 검색 비용을 줄이는 AX 인프라 구축 사업 제안서입니다.

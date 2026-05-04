@@ -232,6 +232,29 @@ export const architectureFlow = [
 
 export const architectureAdmin = ['문서 관리', '재인덱싱', '피드백 관리'];
 
+export const architectureGroups = [
+  {
+    label: 'User Layer',
+    title: '사용자 접점',
+    items: ['사용자 질문', '출처 포함 응답'],
+  },
+  {
+    label: 'Security Layer',
+    title: '보안/권한',
+    items: ['인증/권한 확인', '권한 기반 문서 검색 제한'],
+  },
+  {
+    label: 'Retrieval Layer',
+    title: '검색/문서 처리',
+    items: ['문서 검색(Vector DB)', '관련 문서 추출'],
+  },
+  {
+    label: 'Generation Layer',
+    title: '답변/운영',
+    items: ['답변 생성', '로그 저장 / 오답 신고'],
+  },
+];
+
 export const staffing = [
   { role: 'Project Manager', count: '1', responsibility: '범위, 일정, 고객 커뮤니케이션, 리스크 관리' },
   { role: 'AI/RAG Engineer', count: '2', responsibility: 'RAG 파이프라인, Embedding, 검색 품질 개선' },

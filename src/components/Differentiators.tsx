@@ -11,9 +11,11 @@ export function Differentiators() {
       <div className="differentiator-grid">
         {differentiators.map((item, index) => (
           <article className="differentiator-card" key={item.title}>
-            <span className="number-badge">{String(index + 1).padStart(2, '0')}</span>
-            <h3>{item.title}</h3>
-            <p>{item.description}</p>
+            <div className="card-heading">
+              <span className="number-badge">{String(index + 1).padStart(2, '0')}</span>
+              <h3>{item.title}</h3>
+            </div>
+            <p className="card-summary">{item.description}</p>
             <ul>
               {item.points.map((point) => (
                 <li key={point}>{point}</li>

@@ -8,6 +8,18 @@ export function BuildTimeline() {
       title="구축 타임라인"
       description="사전 컨설팅 2주 이후, 실제 구축은 10주 내 MVP 구축 및 전사 베타 오픈을 목표로 한다."
     >
+      <div className="timeline-summary">
+        <div>
+          <span>Pre-consulting</span>
+          <strong>2주</strong>
+          <p>범위·권한·품질 기준 확정</p>
+        </div>
+        <div>
+          <span>MVP Build</span>
+          <strong>10주</strong>
+          <p>구축 및 전사 베타 오픈</p>
+        </div>
+      </div>
       <div className="timeline-shell">
         <div className="weeks-grid week-header">
           {Array.from({ length: 10 }, (_, index) => (
